@@ -1,13 +1,12 @@
 package javvvaa;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Scanner;
 
 abstract class Media {
-    private String id;
-    private String title;
-    private int yearPublished;
+    String id;
+    String title;
+    protected int yearPublished;
     private double rentalFee;
 
     public Media(String id, String title, int yearPublished) {
@@ -43,7 +42,8 @@ abstract class Media {
 
     public abstract void display();
 
-    public void calculateRentalFee() {
+    public double calculateRentalFee() {
+		return rentalFee;
         // No calculation needed for generic media
     }
 }
@@ -66,13 +66,19 @@ class EBook extends Media {
     }
 
     @Override
-    public void calculateRentalFee() {
+    public double calculateRentalFee() {
         double rentalFee = numChapters * 0.10 + getRentalFee();
         if (getYearPublished() > 2015) {
             rentalFee += 1.00;
         }
         setRentalFee(rentalFee);
+		return rentalFee;
     }
+
+	private void setRentalFee(double rentalFee) {
+		// TODO Auto-generated method stub
+		
+	}
 }
 
 class MusicCD extends Media {
@@ -93,13 +99,19 @@ class MusicCD extends Media {
     }
 
     @Override
-    public void calculateRentalFee() {
+    public double calculateRentalFee() {
         double rentalFee = lengthMinutes * 0.045 + getRentalFee();
         if (getYearPublished() > 2014) {
             rentalFee += 2.00;
         }
         setRentalFee(rentalFee);
+		return rentalFee;
     }
+
+	private void setRentalFee(double rentalFee) {
+		// TODO Auto-generated method stub
+		
+	}
 }
 
 class MovieDVD extends Media {
@@ -121,6 +133,12 @@ class MovieDVD extends Media {
     public String toString() {
         return super.toString() + ", Size (MB): " + sizeMB + ", Rental Fee: $" + calculateRentalFee();
     }
+
+	@Override
+	public void display() {
+		// TODO Auto-generated method stub
+		
+	}
 }
 
 class Manager {
@@ -190,62 +208,63 @@ public class ASG4JoelLopez {
         Manager manager = new Manager();
         manager.loadMediaData(); // Load initial media data from data file
 
-        Scanner scanner = new Scanner(System.in);
-        int choice;
-        do {
-            System.out.println("MovieDVD Manager");
-            System.out.println("1. Display Media Library");
-            System.out.println("2. Add Media");
-            System.out.println("3. Remove Media");
-            System.out.println("4. Rent Media");
-            System.out.println("5. Modify Media");
-            System.out.println("6. Exit");
-            System.out.print("Enter your choice: ");
-            choice = scanner.nextInt();
-            scanner.nextLine(); // Consume the newline character
+        try (Scanner scanner = new Scanner(System.in)) {
+			int choice;
+			do {
+			    System.out.println("MovieDVD Manager");
+			    System.out.println("1. Display Media Library");
+			    System.out.println("2. Add Media");
+			    System.out.println("3. Remove Media");
+			    System.out.println("4. Rent Media");
+			    System.out.println("5. Modify Media");
+			    System.out.println("6. Exit");
+			    System.out.print("Enter your choice: ");
+			    choice = scanner.nextInt();
+			    scanner.nextLine(); // Consume the newline character
 
-            switch (choice) {
-                case 1:
-                    manager.displayMediaLibrary();
-                    break;
-                case 2:
-                    System.out.print("Enter ID: ");
-                    String id = scanner.nextLine();
-                    System.out.print("Enter Title: ");
-                    String title = scanner.nextLine();
-                    System.out.print("Enter Year Published: ");
-                    int yearPublished = scanner.nextInt();
-                    System.out.print("Enter Size (MB): ");
-                    int sizeMB = scanner.nextInt();
-                    MovieDVD movieDVD = new MovieDVD(id, title, yearPublished, sizeMB);
-                    manager.addMedia(movieDVD);
-                    break;
-                case 3:
-                    System.out.print("Enter ID of media to remove: ");
-                    String mediaIdToRemove = scanner.nextLine();
-                    manager.removeMedia(mediaIdToRemove);
-                    break;
-                case 4:
-                    System.out.print("Enter ID of media to rent: ");
-                    String mediaIdToRent = scanner.nextLine();
-                    manager.rentMedia(mediaIdToRent);
-                    break;
-                case 5:
-                    System.out.print("Enter ID of media to modify: ");
-                    String mediaIdToModify = scanner.nextLine();
-                    System.out.print("Enter new title: ");
-                    String newTitle = scanner.nextLine();
-                    System.out.print("Enter new year published: ");
-                    int newYear = scanner.nextInt();
-                    manager.modifyMedia(mediaIdToModify, newTitle, newYear);
-                    break;
-                case 6:
-                    System.out.println("Exiting MovieDVD Manager");
-                    break;
-                default:
-                    System.out.println("Invalid choice. Please try again.");
-                    break;
-            }
-        } while (choice != 6);
+			    switch (choice) {
+			        case 1:
+			            manager.displayMediaLibrary();
+			            break;
+			        case 2:
+			            System.out.print("Enter ID: ");
+			            String id = scanner.nextLine();
+			            System.out.print("Enter Title: ");
+			            String title = scanner.nextLine();
+			            System.out.print("Enter Year Published: ");
+			            int yearPublished = scanner.nextInt();
+			            System.out.print("Enter Size (MB): ");
+			            int sizeMB = scanner.nextInt();
+			            MovieDVD movieDVD = new MovieDVD(id, title, yearPublished, sizeMB);
+			            manager.addMedia(movieDVD);
+			            break;
+			        case 3:
+			            System.out.print("Enter ID of media to remove: ");
+			            String mediaIdToRemove = scanner.nextLine();
+			            manager.removeMedia(mediaIdToRemove);
+			            break;
+			        case 4:
+			            System.out.print("Enter ID of media to rent: ");
+			            String mediaIdToRent = scanner.nextLine();
+			            manager.rentMedia(mediaIdToRent);
+			            break;
+			        case 5:
+			            System.out.print("Enter ID of media to modify: ");
+			            String mediaIdToModify = scanner.nextLine();
+			            System.out.print("Enter new title: ");
+			            String newTitle = scanner.nextLine();
+			            System.out.print("Enter new year published: ");
+			            int newYear = scanner.nextInt();
+			            manager.modifyMedia(mediaIdToModify, newTitle, newYear);
+			            break;
+			        case 6:
+			            System.out.println("Exiting MovieDVD Manager");
+			            break;
+			        default:
+			            System.out.println("Invalid choice. Please try again.");
+			            break;
+			    }
+			} while (choice != 6);
+		}
     }
 }
